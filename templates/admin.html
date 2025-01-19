@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% include "head.html" %}
+</head>
+<style>
+* {
+  box-sizing: border-box;
+}
+
+#myInput {
+  background-image: url('/css/searchicon.png');
+  background-position: 10px 10px;
+  background-repeat: no-repeat;
+  width: 100%;
+  font-size: 16px;
+  padding: 12px 20px 12px 40px;
+  border: 1px solid #ddd;
+  margin-bottom: 12px;
+}
+
+#myTable {
+  border-collapse: collapse;
+  width: 100%;
+  border: 1px solid #ddd;
+  font-size: 18px;
+}
+
+#myTable th, #myTable td {
+  text-align: left;
+  padding: 12px;
+}
+
+#myTable tr {
+  border-bottom: 1px solid #ddd;
+}
+
+#myTable tr.header, #myTable tr:hover {
+  background-color: #f1f1f1;
+}
+</style>
+<body>
+
+{% include "navbar.html" %}
+
+<section class="py-1">
+    <div class="row mt-5">
+        <div class="col-lg-8 offset-lg-2">
+            <h3>Data Petugas</h3>
+            <hr>
+            <div class="row">
+                <div class="col-lg-4">
+                    <a href="/registrasi" type="button" class="btn btn-success btn-lg"
+                     style="background-color: rgba(15, 135, 207, 1); color: white;
+                       border: 2px solid rgba(15, 135, 207, 1); transition: background-color 0.3s ease, color 0.3s ease;"
+                       onmouseover="this.style.color='rgba(203, 203, 203, 1)'; this.style.backgroundColor='rgba(13, 122, 188, 1)'; this.style.borderColor='rgba(13, 122, 188, 1)';"
+                       onmouseout="this.style.color='white'; this.style.backgroundColor='rgba(15, 135, 207, 1)'; this.style.borderColor='rgba(15, 135, 207, 1)';">
+                        <b>Tambah Petugas</b>
+                    </a>
+                </div>
+                <div class="col-lg-2">
+                </div>
+
+            </div>
+
+            <br>
+            <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Mencari nama . ." title="Type in a name">
+
+<table id="myTable">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nama</th>
+                        <th>Email</th>
+                        <th>Tingkat</th>
+                        <th>Ditambahkan</th>
+                         <th>Ubah / Hapus</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in data %}
+                        <tr>
+                            <td>{{item[0]}}</td>
+                            <td>{{item[1]}}</td>
+                            <td>{{item[2]}}</td>
+                            <td>{{item[3]}}</td>
+                            <td>{{item[4]}}</td>
+                            <td><a href="/editadmin/{{item[0]}}" type="button" class="btn btn-warning btn-lg"
+                            style="background-color: rgba(110, 110, 110, 1); color: white; border: 2px solid rgba(110, 110, 110, 1);
+                               ; transition: background-color 0.3s ease, color 0.3s ease;"
+                               onmouseover="this.style.color='rgba(203, 203, 203, 1)'; this.style.backgroundColor='rgba(81, 81, 81, 1)'; this.style.borderColor='rgba(81, 81, 81, 1)';"
+                               onmouseout="this.style.color='white';  this.style.backgroundColor='rgba(110, 110, 110, 1)'; this.style.borderColor='rgba(110, 110, 110, 1)'">
+                                <b>-</b>
+                            </a>
+                                <span></span><a href="/deleteadmin/{{item[0]}}" type="button" class="btn btn-danger btn-lg"
+                                style="background-color: rgba(39, 39, 39, 1); color: white; border: 2px solid rgba(39, 39, 39, 1);
+                               ; transition: background-color 0.3s ease, color 0.3s ease;"
+                               onmouseover="this.style.color='rgba(203, 203, 203, 1)'; this.style.backgroundColor='rgba(0, 0, 0, 1)'; this.style.borderColor='rgba(0, 0, 0, 1)';"
+                               onmouseout="this.style.color='white';  this.style.backgroundColor='rgba(39, 39, 39, 1)'; this.style.borderColor='rgba(39, 39, 39, 1)'">
+                                <b>X</b></a></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+</section>
+<!-- Include Footer -->
+{% include "footer.html" %}
+</body>
+<script>
+function myFunction() {
+  var input, filter, table, tr, td, i, txtValue;
+  input = document.getElementById("myInput");
+  filter = input.value.toUpperCase();
+  table = document.getElementById("myTable");
+  tr = table.getElementsByTagName("tr");
+  for (i = 0; i < tr.length; i++) {
+    td = tr[i].getElementsByTagName("td")[1];
+    if (td) {
+      txtValue = td.textContent || td.innerText;
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+      } else {
+        tr[i].style.display = "none";
+      }
+    }
+  }
+}
+</script>
+</html>

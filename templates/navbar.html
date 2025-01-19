@@ -1,0 +1,121 @@
+<nav class="navbar navbar-fixed-top navbar-expand-lg py-2 navbar-dark bg-dark shadow-sm">
+    <div class="container">
+        <a href="#" class="navbar-brand">
+          <!-- Logo Image -->
+          <img src="{{ url_for('static', filename='img/logo.png') }}" width="270" alt="" class="d-inline-block align-middle mr-2">
+          <!-- Logo Text -->
+          <span class="font-weight-bold"></span>
+        </a>
+
+         <ul class="nav nav-pills"  >
+
+       <!-- START MENU UNTUK LEVEL ADMIN -->
+        {% if session['level'] == 'Admin' : %}
+
+          <li class="navbar-brand">
+            <div class="dropdown">
+                <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                    style="background-color: rgba(0, 73, 113, 1); color: white;
+                    border: 2px solid white; transition: background-color 0.3s ease, color 0.3s ease;"
+                   onmouseover="this.style.color='rgba(203, 203, 203, 1)'; this.style.borderColor='rgba(203, 203, 203, 1)';"
+                   onmouseout="this.style.color='white'; this.style.borderColor='white';">
+                    Download
+                </a>
+
+              <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                <a class="dropdown-item" href="{{url_for('downloadExcelAll')}}">Unduh Semua</a>
+                <a class="dropdown-item" href="{{url_for('downloadExcelBydate')}}">Unduh dari Tanggal</a>
+                <a class="dropdown-item" href="{{url_for('downloadExcelByname')}}">Unduh dari Nama & Tanggal</a>
+              </div>
+            </div>
+          </li>
+          <li class="navbar-brand">
+               <a class="btn btn-secondary" href="{{url_for('admin')}}" role="button"   aria-expanded="false"
+                    style="background-color: rgba(0, 73, 113, 1); color: white;
+                    border: 2px solid white; transition: background-color 0.3s ease, color 0.3s ease;"
+                   onmouseover="this.style.color='rgba(203, 203, 203, 1)'; this.style.borderColor='rgba(203, 203, 203, 1)';"
+                   onmouseout="this.style.color='white'; this.style.borderColor='white';">
+                   Data Petugas
+              </a>
+          </li>
+             <li class="navbar-brand">
+              <a class="btn btn-secondary" href="{{url_for('petugas')}}" role="button"   aria-expanded="false"
+                    style="background-color: rgba(0, 73, 113, 1); color: white;
+                    border: 2px solid white; transition: background-color 0.3s ease, color 0.3s ease;"
+                   onmouseover="this.style.color='rgba(203, 203, 203, 1)'; this.style.borderColor='rgba(203, 203, 203, 1)';"
+                   onmouseout="this.style.color='white'; this.style.borderColor='white';">
+                Data Mahasiswa
+              </a>
+          </li>
+              <li class="navbar-brand">
+                   <div class="dropdown">
+              <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                    style="background-color: rgba(15, 135, 207, 1); color: white;
+                    border: 2px solid rgba(15, 135, 207, 1); transition: background-color 0.3s ease, color 0.3s ease;"
+                   onmouseover="this.style.color='rgba(203, 203, 203, 1)'; this.style.backgroundColor='rgba(13, 122, 188, 1)'; this.style.borderColor='rgba(13, 122, 188, 1)';"
+                   onmouseout="this.style.color='white';  this.style.backgroundColor='rgba(15, 135, 207, 1)'; this.style.borderColor=rgba(15, 135, 207, 1)">
+                  Akun
+              </a>
+
+              <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                <a class="dropdown-item" href="#">{{ session.level }} :  {{ session.username }}</a>
+                <a class="dropdown-item" href="{{url_for('logout')}}">Logout</a>
+              </div>
+            </div>
+
+          </li>
+
+        <!-- END MENU UNTUK LEVEL ADMIN -->
+        {% elif session['level'] == 'Petugas' : %}
+        <!-- START MENU UNTUK LEVEL PETUGAS -->
+             <li class="navbar-brand">
+            <div class="dropdown">
+              <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+              style="background-color: rgba(0, 73, 113, 1); color: white;
+                    border: 2px solid white; transition: background-color 0.3s ease, color 0.3s ease;"
+                   onmouseover="this.style.color='rgba(203, 203, 203, 1)'; this.style.borderColor='rgba(203, 203, 203, 1)';"
+                   onmouseout="this.style.color='white'; this.style.borderColor='white';">
+                Download
+              </a>
+
+              <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                <a class="dropdown-item" href="{{url_for('downloadExcelAll')}}">Unduh Semual</a>
+                <a class="dropdown-item" href="{{url_for('downloadExcelBydate')}}">Unduh dari Tanggal</a>
+                <a class="dropdown-item" href="{{url_for('downloadExcelByname')}}">Unduh dari Nama & Tanggal</a>
+              </div>
+            </div>
+          </li>
+          <li class="navbar-brand">
+            <a class="btn btn-secondary" href="{{url_for('petugas')}}" role="button"   aria-expanded="false"
+            style="background-color: rgba(0, 73, 113, 1); color: white;
+                    border: 2px solid white; transition: background-color 0.3s ease, color 0.3s ease;"
+                   onmouseover="this.style.color='rgba(203, 203, 203, 1)'; this.style.borderColor='rgba(203, 203, 203, 1)';"
+                   onmouseout="this.style.color='white'; this.style.borderColor='white';">
+                Data Mahasiswa
+              </a>
+          </li>
+             <li class="navbar-brand">
+             <div class="dropdown">
+              <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+               style="background-color: rgba(15, 135, 207, 1); color: white;
+                    border: 2px solid rgba(15, 135, 207, 1); transition: background-color 0.3s ease, color 0.3s ease;"
+                   onmouseover="this.style.color='rgba(203, 203, 203, 1)'; this.style.backgroundColor='rgba(13, 122, 188, 1)'; this.style.borderColor='rgba(13, 122, 188, 1)';"
+                   onmouseout="this.style.color='white';  this.style.backgroundColor='rgba(15, 135, 207, 1)'; this.style.borderColor=rgba(15, 135, 207, 1)">
+                Akun
+              </a>
+
+              <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                <a class="dropdown-item" href="#">{{ session.level }} :  {{ session.username }}</a>
+                <a class="dropdown-item" href="{{url_for('logout')}}">Logout</a>
+              </div>
+            </div>
+          </li>
+
+        <!-- END MENU UNTUK LEVEL PETUGAS -->
+        {% endif %}
+
+
+        </ul>
+    </div>
+</nav>

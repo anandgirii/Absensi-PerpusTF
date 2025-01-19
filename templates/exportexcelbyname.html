@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% include "head.html" %}
+</head>
+<body>
+
+{% include "navbar.html" %}
+
+<section class="py-1">
+    <div class="row mt-5">
+        <div class="col-lg-8 offset-lg-2">
+            <h3>Unduh Excel dari Nama & Tanggal</h3>
+            <hr>
+            <form class="form" method="post" action="/export_excel_byname">
+
+                <div class="form-group row">
+                    <label for="txtnbr" class="col-sm-2 col-form-label">Nama</label>
+                    <div class="col-sm-4">
+                        <select class="form-control" name="txtnbr" id="txtnbr">
+                            {% for item in data %}
+                            <option value={{item[0]}}>{{item[1]}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="txtdateawal" class="col-sm-2 col-form-label">Tanggal Awal</label>
+                    <div class="col-sm-8">
+                        <input type="date" class="form-control"  id="txtdateawal" name="txtdateawal" required>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="txtdateakhir" class="col-sm-2 col-form-label">Tanggal Akhir</label>
+                    <div class="col-sm-8">
+                        <input type="date" class="form-control" id="txtdateakhir" name="txtdateakhir" required>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label"></label>
+                    <div class="col-sm-8">
+                        <input type="submit" class="btn btn-primary btn-lg" value="Download"
+                        style="background-color: rgba(39, 39, 39, 1); color: white; border: 2px solid rgba(39, 39, 39, 1);
+                               ; transition: background-color 0.3s ease, color 0.3s ease;"
+                               onmouseover="this.style.color='rgba(203, 203, 203, 1)'; this.style.backgroundColor='rgba(0, 0, 0, 1)'; this.style.borderColor='rgba(0, 0, 0, 1)';"
+                               onmouseout="this.style.color='white';  this.style.backgroundColor='rgba(39, 39, 39, 1)'; this.style.borderColor='rgba(39, 39, 39, 1)'">
+
+                        <a href="/petugas" type="button" class="btn btn-warning btn-lg"
+                        style="background-color: rgba(110, 110, 110, 1); color: white; border: 2px solid rgba(110, 110, 110, 1);
+                               ; transition: background-color 0.3s ease, color 0.3s ease;"
+                               onmouseover="this.style.color='rgba(203, 203, 203, 1)'; this.style.backgroundColor='rgba(81, 81, 81, 1)'; this.style.borderColor='rgba(81, 81, 81, 1)';"
+                               onmouseout="this.style.color='white';  this.style.backgroundColor='rgba(110, 110, 110, 1)'; this.style.borderColor='rgba(110, 110, 110, 1)'">
+                            <b>Back</b></a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+</body>
+</html>

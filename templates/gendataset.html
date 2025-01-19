@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% include "head.html" %}
+    <style>
+        .gif-container {
+            position: relative;
+        }
+        .gif-image {
+            position: absolute;
+            top: 13%; /* Sesuaikan posisi vertikal */
+            left: 150%; /* Sesuaikan posisi horizontal agar sejajar dengan kamera */
+        }
+
+    </style>
+</head>
+<body>
+
+{% include "navbar.html" %}
+
+<section class="py-1">
+    <div class="row mt-5">
+        <div class="col-md-3 offset-lg-2 gif-container">
+            <h3>Pindai Wajah Anda</h3>
+            <hr>
+            <img src="{{ url_for('vidfeed_dataset', nbr=prs) }}" width="100%" class="img-thumbnail">
+            <!-- Tambahkan GIF di sini -->
+            <img src="../static/img/facerec.gif" class="gif-image" width="100%" alt="GIF Description">
+        </div>
+    </div>
+
+    <br>
+    <div class="row">
+        <div class="col-md-3 offset-lg-2">
+            <a class="btn btn-warning btn-lg" href="{{ url_for('train_classifier', nbr=prs) }}"
+             style="background-color: rgba(39, 39, 39, 1); color: white; border: 2px solid rgba(39, 39, 39, 1);
+                               ; transition: background-color 0.3s ease, color 0.3s ease;"
+                               onmouseover="this.style.color='rgba(203, 203, 203, 1)'; this.style.backgroundColor='rgba(0, 0, 0, 1)'; this.style.borderColor='rgba(0, 0, 0, 1)';"
+                               onmouseout="this.style.color='white';  this.style.backgroundColor='rgba(39, 39, 39, 1)'; this.style.borderColor='rgba(39, 39, 39, 1)'">
+            Unggah </a>
+        </div>
+    </div>
+</section>
+
+</body>
+</html>
