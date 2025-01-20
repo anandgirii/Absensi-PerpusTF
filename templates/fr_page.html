@@ -2,69 +2,226 @@
 <html lang="en">
 <head>
     {% include "head.html" %}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- CDN Chart.js -->
+    <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    /* Presensi header */
+    #presensiHeader {
+      width: 80%; /* Sejajar dengan tabel */
+      margin: 0 auto; /* Pusatkan secara horizontal */
+      display: flex;
+      justify-content: space-between; /* Letakkan judul di kiri, kotak count di kanan */
+      align-items: center; /* Vertikal sejajar */
+      margin-bottom: 10px; /* Jarak kecil di bawah header */
+    }
+
+    /* Kotak pencarian */
+    #myInput {
+      width: 80%; /* Sejajar dengan tabel */
+      margin: 10px auto; /* Pusatkan dan beri jarak dengan header */
+      display: block; /* Agar berperilaku seperti elemen blok */
+    }
+
+    /* Styling untuk tabel */
+    #myTableWrapper {
+      max-height: 150px; /* Lebih kecil agar grafik muat */
+      overflow-y: auto; /* Tambahkan scrollbar vertikal */
+      border: 1px solid #ddd; /* Border pembungkus tabel */
+      margin-bottom: 5px; /* Sedikit ruang di bawah tabel */
+      padding: 0px; /* Hilangkan padding */
+      width: 80%; /* Lebar tabel dikurangi */
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    #myTable {
+      border-collapse: collapse;
+      width: 100%;
+      border: 1px solid #ddd;
+      font-size: 16px;
+    }
+
+    #myTable th, #myTable td {
+      text-align: left;
+      padding: 8px;
+    }
+
+    #myTable tr {
+      border-bottom: 1px solid #ddd;
+    }
+
+    #myTable tr.header, #myTable tr:hover {
+      background-color: #f1f1f1;
+    }
+
+    /* Judul untuk grafik */
+    #chartTitle {
+        font-size: 25px; /* Ukuran font judul */
+        font-weight: bold; /* Membuat teks lebih tebal */
+        text-align: semibold; /* Sejajarkan ke kiri */
+        width: 80%; /* Sesuaikan lebar dengan tabel */
+        margin: 20px auto 10px; /* Jarak atas 20px, bawah 10px */
+    }
+
+    /* Styling untuk kotak count_in */
+    #countInBox {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 80px;
+      height: 40px;
+      background-color: #f8f9fa;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-size: 16px;
+      font-weight: bold;
+      text-align: center;
+      color: #333;
+    }
+
+    /* Styling untuk grafik */
+    #chartContainer {
+      width: 80%; /* Lebar grafik */
+      height: 250px; /* Tinggi grafik dikurangi */
+      margin: 10px auto; /* Pusatkan grafik */
+    }
+
+    /* Styling untuk kamera */
+    .video-feed {
+      width: 100%; /* Lebar kamera diperluas */
+      height: 550px; /* Tinggi kamera diperbesar */
+      object-fit: cover; /* Sesuaikan agar proporsional */
+      margin-bottom: 20px; /* Sedikit ruang di bawah kamera */
+    }
+
+    /* Slider Switch */
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 60px;
+      height: 34px;
+      margin-bottom: 10px;
+    }
+
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      transition: .4s;
+      border-radius: 34px;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 26px;
+      width: 26px;
+      left: 4px;
+      bottom: 4px;
+      background-color: white;
+      transition: .4s;
+      border-radius: 50%;
+    }
+
+    input:checked + .slider {
+      background-color: #2196F3;
+    }
+
+    input:checked + .slider:before {
+      transform: translateX(26px);
+    }
+
+    /* Text status for camera toggle */
+    #cameraStatus {
+      font-size: 16px;
+      margin-left: 10px;
+      font-weight: bold;
+      color: #333;
+      line-height: 34px; /* Match the height of the slider */
+      vertical-align: middle;
+    }
+    </style>
 </head>
-<style>
-* {
-  box-sizing: border-box;
-}
-
-#myInput {
-  background-image: url('..static/css/searchicon.png');
-  background-position: 10px 10px;
-  background-repeat: no-repeat;
-  width: 100%;
-  font-size: 16px;
-  padding: 12px 20px 12px 40px;
-  border: 1px solid #ddd;
-  margin-bottom: 12px;
-}
-
-#myTable {
-  border-collapse: collapse;
-  width: 100%;
-  border: 1px solid #ddd;
-  font-size: 18px;
-}
-
-#myTable th, #myTable td {
-  text-align: left;
-  padding: 12px;
-}
-
-#myTable tr {
-  border-bottom: 1px solid #ddd;
-}
-
-#myTable tr.header, #myTable tr:hover {
-  background-color: #f1f1f1;
-}
-</style>
-<body >
+<body>
 
 {% include "navbar.html" %}
 
 <div class="container-fluid">
     <div class="row mt-5 mb-5">
+        <!-- Video kamera -->
         <div class="col-md-8">
-            <img src="{{ url_for('video_feed') }}" width="100%" class="img-thumbnail">
+            <!-- Slider Switch -->
+            <label class="switch">
+                <input type="checkbox" id="cameraToggle" checked>
+                <span class="slider"></span>
+            </label>
+            <span id="cameraStatus">ON</span>
+            <img src="{{ url_for('video_feed') }}" id="videoFeed" class="video-feed img-thumbnail">
         </div>
-        <div class="col-md-4" style="height:500px; overflow-y:auto;">
-            <h3>Presensi Hari Ini</h3>
-           <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Mencari nama . ." title="Type in a name">
 
-<table id="myTable">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Nama</th>
-                        <th>Status</th>
-                        <th>Waktu</th>
-                    </tr>
-                </thead>
-                <tbody id="scandata">
+        <!-- Tabel dan grafik di samping kamera -->
+        <div class="col-md-4">
+            <div class="col-md-12" style="overflow-y:auto;">
+                <!-- Header: Tulisan Presensi Hari Ini dan kotak count -->
+                <div id="presensiHeader">
+                    <h3 class="mb-0">Presensi Hari Ini</h3>
+                    <div id="countInBox">0</div>
+                </div>
 
-                </tbody>
-            </table>
+                <style>
+                    #myInput {
+                        border: 1px solid gray;
+                        border-radius: 4px;
+                        padding: 8px;
+                    }
+
+                    #myInput:focus {
+                        outline: none;
+                        border: 1px solid darkgray; /* Warna border saat input fokus */
+                    }
+                </style>
+
+                <!-- Kotak pencarian -->
+                <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Mencari nama . ." title="Type in a name">
+
+                <!-- Bungkus tabel dengan wrapper -->
+                <!-- Area tabel -->
+                <div id="myTableWrapper">
+                    <table id="myTable">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nama</th>
+                                <th>Status</th>
+                                <th>Waktu</th>
+                            </tr>
+                        </thead>
+                        <tbody id="scandata"></tbody>
+                    </table>
+                </div>
+
+                <!-- Judul untuk grafik -->
+                <div id="chartTitle">
+                    <h3 class="mb-0">Jumlah Orang Real Time</h3>
+                </div>
+
+                <!-- Area grafik -->
+                <div id="chartContainer">
+                    <canvas id="myChart"></canvas>
+                </div>
         </div>
     </div>
 </div>
@@ -73,6 +230,106 @@
     $(document).ready(function() {
         let lastcnt = 0;
         let cnt;
+
+        // Toggle camera visibility and update status
+        $('#cameraToggle').change(function() {
+        if (this.checked) {
+            $('#videoFeed').show();
+            $('#cameraStatus').text('ON');
+            $.ajax({
+                url: '/enable_camera',
+                type: 'POST',
+                success: function(response) {
+                    console.log(response.status); // Debug log
+                },
+                error: function(xhr, status, error) {
+                    console.error('Failed to enable camera:', error);
+                }
+            });
+        } else {
+            $('#videoFeed').hide();
+            $('#cameraStatus').text('OFF');
+            $.ajax({
+                url: '/disable_camera',
+                type: 'POST',
+                success: function(response) {
+                    console.log(response.status); // Debug log
+                },
+                error: function(xhr, status, error) {
+                    console.error('Failed to disable camera:', error);
+                }
+            });
+        }
+    });
+
+
+        // Inisialisasi Chart.js
+        const ctx = document.getElementById('myChart').getContext('2d');
+        const myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: [], // Label waktu (dinamis)
+                datasets: [{
+                    label: 'Jumlah Orang',
+                    data: [], // Jumlah orang (dinamis)
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)', // Warna area
+                    borderColor: 'rgba(75, 192, 192, 1)',       // Warna garis
+                    borderWidth: 2,
+                    tension: 0.4,
+                    pointBackgroundColor: 'rgba(255, 99, 132, 1)',
+                    pointRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top',
+                        labels: {
+                            color: '#666',
+                            font: {
+                                size: 14
+                            }
+                        }
+                    },
+                    tooltip: {
+                        enabled: true
+                    }
+                },
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Waktu',
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Jumlah Orang',
+                        },
+                        ticks: {
+                            stepSize: 1,
+                            callback: function(value) {
+                                return Number.isInteger(value) ? value : null;
+                            }
+                        },
+                        min: function(context) {
+                            const data = context.chart.data.datasets[0].data;
+                            return Math.max(0, Math.min(...data) - 5);
+                        },
+                        max: function(context) {
+                            const data = context.chart.data.datasets[0].data;
+                            return Math.max(...data) + 5;
+                        }
+                    }
+                }
+            }
+        });
+
+        // Panggil fungsi untuk memulai loop pengecekan scan
         chkNewScan();
 
         function chkNewScan() {
@@ -87,67 +344,93 @@
                 dataType: 'json',
                 success: function(data) {
                     cnt = data.rowcount;
-                    if (cnt > lastcnt) {
-                        reloadTable();
-                    }
+
+                    reloadTable();
+                    updateChart(cnt); // Perbarui grafik saat ada perubahan jumlah
+
+<!--                    if (cnt > lastcnt) {-->
+<!--                        reloadTable();-->
+<!--                        updateChart(cnt); // Perbarui grafik saat ada perubahan jumlah-->
+<!--                    }-->
 
                     lastcnt = cnt;
                 },
-                error: function(result){
+                error: function(result) {
                     console.log('no result!')
                 }
-            })
+            });
         }
 
+
+        // Reload tabel dan perbarui kotak count_in
         function reloadTable() {
             $.ajax({
                 url: '/loadData',
                 type: 'GET',
                 dataType: 'json',
-                success: function(response){
+                success: function(response) {
                     var tr = $("#scandata");
                     tr.empty();
 
-                    $.each(response, function(index, item) {
+                    // Perbarui kotak count_in dengan nilai dari backend
+                    document.getElementById('countInBox').innerText = response.count_in;
+
+                    // Isi ulang tabel dengan data dari backend
+                    $.each(response.response, function(index, item) {
                         if (item.length > 0) {
-                            for (let i = 0; i < item.length; i++) {
-                                tr.append('<tr>'+
-                                                '<td>'+item[i][1]+'</td>'+
-                                                '<td>'+item[i][2]+'</td>'+
-                                                '<td>'+item[i][3]+'</td>'+
-                                                '<td>'+item[i][4]+'</td>'+
-                                           '</tr>');
-                            }
+                            tr.append('<tr>' +
+                                '<td>' + item[1] + '</td>' +
+                                '<td>' + item[2] + '</td>' +
+                                '<td>' + item[3] + '</td>' +
+                                '<td>' + item[4] + '</td>' +
+                                '</tr>');
                         }
                     });
                 },
-                error: function(result){
+                error: function(result) {
                     console.log('no result!')
                 }
             });
         }
-    });
-</script>
 
-</body>
-<script>
-function myFunction() {
-  var input, filter, table, tr, td, i, txtValue;
-  input = document.getElementById("myInput");
-  filter = input.value.toUpperCase();
-  table = document.getElementById("myTable");
-  tr = table.getElementsByTagName("tr");
-  for (i = 0; i < tr.length; i++) {
-    td = tr[i].getElementsByTagName("td")[1];
-    if (td) {
-      txtValue = td.textContent || td.innerText;
-      if (txtValue.toUpperCase().indexOf(filter) > -1) {
-        tr[i].style.display = "";
-      } else {
-        tr[i].style.display = "none";
-      }
+        // Fungsi untuk memperbarui data pada grafik
+        function updateChart(count) {
+            const currentTime = new Date().toLocaleTimeString(); // Waktu sekarang
+
+            // Tambahkan data baru ke grafik
+            myChart.data.labels.push(currentTime);
+            myChart.data.datasets[0].data.push(count);
+
+            // Batasi jumlah data di grafik
+            if (myChart.data.labels.length > 20) {
+                myChart.data.labels.shift(); // Hapus data lama
+                myChart.data.datasets[0].data.shift(); // Hapus data lama
+            }
+
+            myChart.update(); // Perbarui grafik
+        }
+    });
+
+    function myFunction() {
+        var input, filter, table, tr, td, i, txtValue;
+        input = document.getElementById("myInput");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("myTable");
+        tr = table.getElementsByTagName("tr");
+        for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[1];
+            if (td) {
+                txtValue = td.textContent || td.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
     }
-  }
-}
 </script>
+    <!-- Include Footer -->
+    {% include "footer.html" %}
+</body>
 </html>

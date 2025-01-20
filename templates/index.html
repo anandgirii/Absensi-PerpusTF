@@ -39,6 +39,31 @@
 #myTable tr.header, #myTable tr:hover {
   background-color: #f1f1f1;
 }
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.pagination button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  margin: 0 5px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.pagination button.disabled {
+  background-color: #ddd;
+  cursor: not-allowed;
+}
+
+#rowsPerPage {
+  margin-bottom: 12px;
+}
 </style>
 <body>
 
@@ -73,70 +98,102 @@
             </div>
 
             <br>
+            <label for="rowsPerPage">Rows per page:</label>
+            <select id="rowsPerPage" onchange="updateRowsPerPage()">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3" selected >3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+            </select>
+
             <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Mencari nama . ." title="Type in a name">
 
 <table id="myTable">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Nama</th>
-                        <th>NIM</th>
-                        <th>Aktif</th>
-                        <th>Ditambahkan</th>
-                        <th>Ubah / Hapus</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for item in data %}
-                        <tr>
-                            <td>{{item[0]}}</td>
-                            <td>{{item[1]}}</td>
-                            <td>{{item[2]}}</td>
-                            <td>{{item[3]}}</td>
-                            <td>{{item[4]}}</td>
-                            <td><a href="/edit/{{item[0]}}" type="button" class="btn btn-warning btn-lg"
-                            style="background-color: rgba(110, 110, 110, 1); color: white; border: 2px solid rgba(110, 110, 110, 1);
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nama</th>
+            <th>NIM</th>
+            <th>Aktif</th>
+            <th>Ditambahkan</th>
+            <th>Ubah / Hapus</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in data %}
+            <tr>
+                <td>{{item[0]}}</td>
+                <td>{{item[1]}}</td>
+                <td>{{item[2]}}</td>
+                <td>{{item[3]}}</td>
+                <td>{{item[4]}}</td>
+                <td>
+                    <a href="/edit/{{item[0]}}" type="button" class="btn btn-warning btn-lg"
+                       style="background-color: rgba(110, 110, 110, 1); color: white; border: 2px solid rgba(110, 110, 110, 1);
                                ; transition: background-color 0.3s ease, color 0.3s ease;"
                                onmouseover="this.style.color='rgba(203, 203, 203, 1)'; this.style.backgroundColor='rgba(81, 81, 81, 1)'; this.style.borderColor='rgba(81, 81, 81, 1)';"
                                onmouseout="this.style.color='white';  this.style.backgroundColor='rgba(110, 110, 110, 1)'; this.style.borderColor='rgba(110, 110, 110, 1)'">
-                                <b>-</b>
-                            </a>
-                                <span></span><a href="/delete/{{item[0]}}" type="button" class="btn btn-danger btn-lg"
-                                style="background-color: rgba(39, 39, 39, 1); color: white; border: 2px solid rgba(39, 39, 39, 1);
+                        <b>-</b></a>
+                    <a href="/delete/{{item[0]}}" type="button" class="btn btn-danger btn-lg"
+                        style="background-color: rgba(39, 39, 39, 1); color: white; border: 2px solid rgba(39, 39, 39, 1);
                                ; transition: background-color 0.3s ease, color 0.3s ease;"
                                onmouseover="this.style.color='rgba(203, 203, 203, 1)'; this.style.backgroundColor='rgba(0, 0, 0, 1)'; this.style.borderColor='rgba(0, 0, 0, 1)';"
                                onmouseout="this.style.color='white';  this.style.backgroundColor='rgba(39, 39, 39, 1)'; this.style.borderColor='rgba(39, 39, 39, 1)'">
-                                    <b>X</b></a></td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-
-            </table>
+                        <b>X</b></a>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<div class="pagination" id="pagination"></div>
         </div>
     </div>
 </section>
-<!-- Include Footer -->
+
 {% include "footer.html" %}
-</body>
+
 <script>
-function myFunction() {
-  var input, filter, table, tr, td, i, txtValue;
-  input = document.getElementById("myInput");
-  filter = input.value.toUpperCase();
-  table = document.getElementById("myTable");
-  tr = table.getElementsByTagName("tr");
-  for (i = 0; i < tr.length; i++) {
-    td = tr[i].getElementsByTagName("td")[1];
-    if (td) {
-      txtValue = td.textContent || td.innerText;
-      if (txtValue.toUpperCase().indexOf(filter) > -1) {
-        tr[i].style.display = "";
-      } else {
-        tr[i].style.display = "none";
-      }
-    }
-  }
+let rowsPerPage = 3; // Default to 3 rows per page
+const table = document.getElementById('myTable');
+const tbody = table.querySelector('tbody');
+const rows = Array.from(tbody.querySelectorAll('tr'));
+const pagination = document.getElementById('pagination');
+let currentPage = 1;
+
+function displayTable(page) {
+    const start = (page - 1) * rowsPerPage;
+    const end = start + rowsPerPage;
+    rows.forEach((row, index) => {
+        row.style.display = index >= start && index < end ? '' : 'none';
+    });
+    updatePagination(page);
 }
 
+function updatePagination(page) {
+    pagination.innerHTML = '';
+    const totalPages = Math.ceil(rows.length / rowsPerPage);
+    for (let i = 1; i <= totalPages; i++) {
+        const button = document.createElement('button');
+        button.textContent = i;
+        button.className = i === page ? 'disabled' : '';
+        button.onclick = () => displayTable(i);
+        pagination.appendChild(button);
+    }
+}
+
+function updateRowsPerPage() {
+    rowsPerPage = parseInt(document.getElementById('rowsPerPage').value);
+    displayTable(1);
+}
+
+displayTable(currentPage);
 </script>
+
+</body>
 </html>
